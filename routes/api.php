@@ -17,12 +17,11 @@ use App\Http\Controllers\AuthenticationController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// v1 api 
+Route::prefix('v1')->group(function () {
+    Route::get('/user', [App\Http\Controllers\V1\UserController::class, 'index'])->middleware(['auth:sanctum']);
+    Route::get('/user/{user:id}', [App\Http\Controllers\V1\UserController::class, 'show'])->middleware(['auth:sanctum']);
+    
+    Route::post('/login', [App\Http\Controllers\V1\AuthenticationController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\V1\AuthenticationController::class, 'logout'])->middleware(['auth:sanctum']);
 });
-
-Route::get('/user', [UserController::class, 'index'])->middleware(['auth:sanctum']);
-Route::get('/user/{user:id}', [UserController::class, 'show'])->middleware(['auth:sanctum']);
-
-Route::post('/login', [AuthenticationController::class, 'login']);
-Route::post('/logout', [AuthenticationController::class, 'logout'])->middleware(['auth:sanctum']);
