@@ -42,6 +42,13 @@ Route::prefix('v1')->group(function () {
             Route::get('/fetch-seller-applications', [App\Http\Controllers\V1\SellerApplicationController::class, 'fetchApplications']);
             Route::post('/seller-application/reject', [App\Http\Controllers\V1\SellerApplicationController::class, 'rejectApplication']);
             Route::post('/seller-application/verify', [App\Http\Controllers\V1\SellerApplicationController::class, 'verifyApplication']);
+
+            // Category routes
+            Route::get('/category', [App\Http\Controllers\V1\CategoryController::class, 'index']);
+            Route::post('/category', [App\Http\Controllers\V1\CategoryController::class, 'store']);
+            Route::get('/category/{category:id}', [App\Http\Controllers\V1\CategoryController::class, 'show']);
+            Route::post('/category/update', [App\Http\Controllers\V1\CategoryController::class, 'update']);
+            Route::post('/category/delete', [App\Http\Controllers\V1\CategoryController::class, 'destroy']);
         });
     });
     
