@@ -3,3 +3,4 @@
 ## DONE API
 
 -   Login
+-   Register

@@ -34,4 +34,34 @@ class AuthenticationController extends Controller
         $user = User::findOrFail(Auth::user()->id);
         $user->tokens()->delete();
     }
+
+    public function Register(Request $request)
+    {
+        $validatedData = $request->validate([
+            'first_name' => ['required', 'string', 'min:1'],
+            'last_name' => ['required', 'string', 'min:1'],
+            'username' => ['required', 'string', 'min:4', 'max:255', 'regex:/^\S*$/u'],
+            'email' => ['required', 'unique:users', 'email'],
+            'password' => ['required', 'min:5', 'confirmed'],
+            'phone_number' => ['required', 'numeric']
+        ]);
+
+        // Hash password
+        $validatedData['password'] = Hash::make($validatedData['password']);
+
+        // Insert data to database
+        $user = User::create($validatedData);
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => $user
+        ], 201);
+        // Log the user in
+        // Auth::login($user);
+
+        // Send email verification notification
+        // event(new Registered($user));
+
+        // return redirect()->route('verification.notice');
+    }
 }

@@ -19,9 +19,15 @@ use App\Http\Controllers\AuthenticationController;
 
 // v1 api 
 Route::prefix('v1')->group(function () {
+    Route::middleware('guest')->group(function () {
+        // Login route
+        Route::post('/login', [App\Http\Controllers\V1\AuthenticationController::class, 'login']);
+
+        // Register route
+        Route::post('/register', [App\Http\Controllers\V1\AuthenticationController::class, 'register']);
+    });
     Route::get('/user', [App\Http\Controllers\V1\UserController::class, 'index'])->middleware(['auth:sanctum']);
     Route::get('/user/{user:id}', [App\Http\Controllers\V1\UserController::class, 'show'])->middleware(['auth:sanctum']);
     
-    Route::post('/login', [App\Http\Controllers\V1\AuthenticationController::class, 'login']);
     Route::post('/logout', [App\Http\Controllers\V1\AuthenticationController::class, 'logout'])->middleware(['auth:sanctum']);
 });
