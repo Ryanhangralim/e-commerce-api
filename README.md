@@ -4,3 +4,4 @@
 
 -   Login
 -   Register
+-   Seller application

@@ -26,6 +26,26 @@ Route::prefix('v1')->group(function () {
         // Register route
         Route::post('/register', [App\Http\Controllers\V1\AuthenticationController::class, 'register']);
     });
+
+    Route::middleware('auth:sanctum')->group(function (){
+        // Find application
+        Route::get('/seller-application', [App\Http\Controllers\V1\SellerApplicationController::class, 'findUserApplication']);
+
+        Route::middleware('role:customer')->group(function () {
+            // Seller application related routes
+            Route::post('/seller-application/new', [App\Http\Controllers\V1\SellerApplicationController::class, 'newSellerApplication']);
+            
+        });
+    
+        Route::middleware('role:admin')->group(function () {
+            // Seller applications route
+            Route::get('/fetch-seller-applications', [App\Http\Controllers\V1\SellerApplicationController::class, 'fetchApplications']);
+            Route::post('/seller-application/reject', [App\Http\Controllers\V1\SellerApplicationController::class, 'rejectApplication']);
+            Route::post('/seller-application/verify', [App\Http\Controllers\V1\SellerApplicationController::class, 'verifyApplication']);
+        });
+    });
+    
+
     Route::get('/user', [App\Http\Controllers\V1\UserController::class, 'index'])->middleware(['auth:sanctum']);
     Route::get('/user/{user:id}', [App\Http\Controllers\V1\UserController::class, 'show'])->middleware(['auth:sanctum']);
     
