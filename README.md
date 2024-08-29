@@ -6,3 +6,4 @@
 -   Register
 -   Seller application
 -   Category
+-   Business

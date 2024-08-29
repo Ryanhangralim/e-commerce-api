@@ -33,4 +33,40 @@ class ProductController extends Controller
             return response()->json(["message" => "Product not found"], 404);
         }
     }
+
+    // Add product stock
+    public function addStock(Product $product, Request $request)
+    {
+        $request->validate([
+            'numberOfProducts' => ['required', 'min:1', 'integer', 'max:2147483647']
+        ]);
+
+        // Update stock
+        $product->stock += (int) $request->numberOfProducts; 
+        $product->save();
+
+        return response()->json(['message' => "Stock added successfully!"], 201);
+    }
+
+    // Subtract stock
+    public static function subtractStock(Product $product, $quantity)
+    {
+        // Subtract stock
+        $product->stock -= $quantity;
+        $product->save();
+    }
+
+    // Set product dicount
+    public function setDiscount(Product $product, Request $request)
+    {
+        $request->validate([
+            'discount' => ['required', 'min:0', 'integer', 'max:99']
+        ]);
+
+        // Update stock
+        $product->discount = (int) $request->discount; 
+        $product->save();
+
+        return response()->json(['message' => "Discount updated successfully!"], 201);
+    }
 }

@@ -49,6 +49,8 @@ Route::prefix('v1')->group(function () {
             Route::middleware('check.business.owner')->group(function() {
                 // Business product details
                 Route::get('/products/{product:slug}', [App\Http\Controllers\V1\ProductController::class, 'viewProductDetail']);
+                Route::post('/products/{product:slug}/add-stock', [App\Http\Controllers\V1\ProductController::class, 'addStock']);
+                Route::post('/products/{product:slug}/set-discount', [App\Http\Controllers\V1\ProductController::class, 'setDiscount']);
             });
         });
 
