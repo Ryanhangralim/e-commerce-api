@@ -172,4 +172,14 @@ class ProductController extends Controller
 
         return response()->json(['message' => "Product updated successfully!"], 201);
     }
+
+    // View product detail for customer
+    public function customerProductDetail(Product $product)
+    {
+        if($product){
+            return response()->json(["product-data" => $product->makeHidden(['business', 'reviews']), "business-data" => $product->business, "product-reviews" => $product->reviews], 200);
+        } else {
+
+        }
+    }
 }

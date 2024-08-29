@@ -47,6 +47,10 @@ Route::prefix('v1')->group(function () {
 
         // Product routes
         Route::prefix('/product')->middleware('auth')->group(function(){
+            // view product detail
+            Route::get('/{product:slug}', [App\Http\Controllers\V1\ProductController::class, 'customerProductDetail']);
+
+            // add product to cart
             Route::post('/{product:slug}', [App\Http\Controllers\V1\CartController::class, 'addProduct']);
         });
         
