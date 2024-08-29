@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\V1\CartController;
 use App\Http\Controllers\V1\ProductController;
 
 /*
@@ -34,7 +35,20 @@ Route::prefix('v1')->group(function () {
         Route::get('/seller-application', [App\Http\Controllers\V1\SellerApplicationController::class, 'findUserApplication']);
 
         // Business related routes
+        // Route to view business
         Route::get('/business/{business:slug}', [App\Http\Controllers\V1\BusinessController::class, 'businessMainPage']);
+
+        // View cart
+        Route::get('/cart', [App\Http\Controllers\V1\CartController::class, 'viewCart']);
+        // Update cart quantity
+        Route::post('/cart', [App\Http\Controllers\V1\CartController::class, 'updateQuantity']);
+        // Delete cart
+        Route::post('/cart/delete-product', [App\Http\Controllers\V1\CartController::class, 'deleteProduct']);
+
+        // Product routes
+        Route::prefix('/product')->middleware('auth')->group(function(){
+            Route::post('/{product:slug}', [App\Http\Controllers\V1\CartController::class, 'addProduct']);
+        });
         
         Route::middleware('role:customer')->group(function () {
             // Seller application related routes
