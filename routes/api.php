@@ -21,7 +21,8 @@ use App\Http\Controllers\AuthenticationController;
 Route::prefix('v1')->group(function () {
     Route::middleware('guest')->group(function () {
         // Login route
-        Route::post('/login', [App\Http\Controllers\V1\AuthenticationController::class, 'login']);
+        Route::post('/login', [App\Http\Controllers\V1\AuthenticationController::class, 'login'])
+        ->name('login');
 
         // Register route
         Route::post('/register', [App\Http\Controllers\V1\AuthenticationController::class, 'register']);
@@ -31,13 +32,16 @@ Route::prefix('v1')->group(function () {
         // Find application
         Route::get('/seller-application', [App\Http\Controllers\V1\SellerApplicationController::class, 'findUserApplication']);
 
+        // Business related routes
+        Route::get('/business/{business:slug}', [App\Http\Controllers\V1\BusinessController::class, 'businessMainPage']);
+        
         Route::middleware('role:customer')->group(function () {
             // Seller application related routes
             Route::post('/seller-application/new', [App\Http\Controllers\V1\SellerApplicationController::class, 'newSellerApplication']);
             
         });
     
-        Route::middleware('role:admin')->group(function () {
+        Route::prefix('/dashboard')->middleware('role:admin')->group(function () {
             // Seller applications route
             Route::get('/fetch-seller-applications', [App\Http\Controllers\V1\SellerApplicationController::class, 'fetchApplications']);
             Route::post('/seller-application/reject', [App\Http\Controllers\V1\SellerApplicationController::class, 'rejectApplication']);
@@ -49,6 +53,10 @@ Route::prefix('v1')->group(function () {
             Route::get('/category/{category:id}', [App\Http\Controllers\V1\CategoryController::class, 'show']);
             Route::post('/category/update', [App\Http\Controllers\V1\CategoryController::class, 'update']);
             Route::post('/category/delete', [App\Http\Controllers\V1\CategoryController::class, 'destroy']);
+
+            // Business routes
+            Route::get('/business', [App\Http\Controllers\V1\BusinessController::class, 'index']);
+            Route::get('/business/{business:slug}', [App\Http\Controllers\V1\BusinessController::class, 'show']);
         });
     });
     

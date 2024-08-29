@@ -5,3 +5,4 @@
 -   Login
 -   Register
 -   Seller application
+-   Category
