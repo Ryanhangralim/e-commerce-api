@@ -34,6 +34,13 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        parent::boot();
+
+        // Bind 'product' parameter to the Product model using the 'slug' column
+        \Illuminate\Support\Facades\Route::bind('product', function ($value) {
+            return \App\Models\Product::where('slug', $value)->firstOrFail();
+        });
     }
 
     /**

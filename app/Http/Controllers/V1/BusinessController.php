@@ -33,7 +33,7 @@ class BusinessController extends Controller
         {
             return response()->json([$business, $business->products], 200);
         } else {
-            return response()->json(["message" => "Business not found"], 200);
+            return response()->json(["message" => "Business not found"], 404);
         }
     }
     
@@ -42,9 +42,9 @@ class BusinessController extends Controller
     {
         if($business)
         {
-            return response()->json([new BusinessMainPageResource($business), BusinessProductResource::collection($business->products)], 200);
+            return response()->json(["business_data" => new BusinessMainPageResource($business), "business_products" => BusinessProductResource::collection($business->products)], 200);
         } else {
-            return response()->json(["message" => "Business not found"], 200);
+            return response()->json(["message" => "Business not found"], 404);
         }
     }
 }

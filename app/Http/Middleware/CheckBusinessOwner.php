@@ -16,13 +16,14 @@ class CheckBusinessOwner
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Retrieve the product ID from the route
+        // Retrieve the Product model instance from the route
         $product = $request->route('product');
-    
+
         if ($product && $product->business->user_id !== auth()->user()->id) {
             return response()->json(['error' => 'You are not authorized to view this product'], 403);
         }
-    
+
         return $next($request);
     }
 }
+

@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\V1\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,17 @@ Route::prefix('v1')->group(function () {
             
         });
     
-        Route::prefix('/dashboard')->middleware('role:admin')->group(function () {
+        Route::prefix('/seller/dashboard')->middleware('role:seller')->group(function () {
+            // Get business products
+            Route::get('/products', [App\Http\Controllers\V1\ProductController::class, 'viewProducts']);
+
+            Route::middleware('check.business.owner')->group(function() {
+                // Business product details
+                Route::get('/products/{product:slug}', [App\Http\Controllers\V1\ProductController::class, 'viewProductDetail']);
+            });
+        });
+
+        Route::prefix('/admin/dashboard')->middleware('role:admin')->group(function () {
             // Seller applications route
             Route::get('/fetch-seller-applications', [App\Http\Controllers\V1\SellerApplicationController::class, 'fetchApplications']);
             Route::post('/seller-application/reject', [App\Http\Controllers\V1\SellerApplicationController::class, 'rejectApplication']);
