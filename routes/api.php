@@ -44,6 +44,12 @@ Route::prefix('v1')->group(function () {
         Route::post('/cart', [App\Http\Controllers\V1\CartController::class, 'updateQuantity']);
         // Delete cart
         Route::post('/cart/delete-product', [App\Http\Controllers\V1\CartController::class, 'deleteProduct']);
+        // Checkout Cart
+        Route::post('/cart/checkout', [App\Http\Controllers\V1\TransactionController::class, 'checkout']);
+        // View transaction
+        Route::get('/transactions', [App\Http\Controllers\V1\TransactionController::class, 'viewTransactions']);
+        // update transaction status (completed, canceled)
+        Route::post('/transactions/update-status', [App\Http\Controllers\V1\TransactionController::class, 'updateTransactionStatus']);
 
         // Product routes
         Route::prefix('/product')->middleware('auth')->group(function(){
@@ -60,6 +66,7 @@ Route::prefix('v1')->group(function () {
             
         });
     
+        // Seller dashboard routes
         Route::prefix('/seller/dashboard')->middleware('role:seller')->group(function () {
             // Get business products
             Route::get('/products', [App\Http\Controllers\V1\ProductController::class, 'viewProducts']);
@@ -72,8 +79,22 @@ Route::prefix('v1')->group(function () {
                 Route::post('/products/{product:slug}/set-discount', [App\Http\Controllers\V1\ProductController::class, 'setDiscount']);
                 Route::post('/products/{product:slug}/edit', [App\Http\Controllers\V1\ProductController::class, 'updateProduct']);
             });
+
+            // Check transaction busienss owner
+            route::middleware('check.transaction.business.owner')->group(function (){
+                // get transaction
+                Route::get('/transactions/fetch-transactions', [App\Http\Controllers\V1\TransactionController::class, 'fetchTransactions']);
+
+                // get transaction detail
+                Route::get('/transactions/{transaction:id}', [App\Http\Controllers\V1\TransactionController::class, 'viewTransactionDetail'])
+                ->whereNumber('transaction');
+
+                // Update transaction status
+                Route::post('/transactions/update-status', [App\Http\Controllers\V1\TransactionController::class, 'updateTransactionStatus']);
+            });
         });
 
+        // Admin dashboard routes
         Route::prefix('/admin/dashboard')->middleware('role:admin')->group(function () {
             // Seller applications route
             Route::get('/fetch-seller-applications', [App\Http\Controllers\V1\SellerApplicationController::class, 'fetchApplications']);

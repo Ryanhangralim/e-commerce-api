@@ -179,7 +179,7 @@ class ProductController extends Controller
         if($product){
             return response()->json(["product-data" => $product->makeHidden(['business', 'reviews']), "business-data" => $product->business, "product-reviews" => $product->reviews], 200);
         } else {
-
+            return response()->json(["message" => "Product not found"], 404);
         }
     }
 }

@@ -41,6 +41,10 @@ class RouteServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\Route::bind('product', function ($value) {
             return \App\Models\Product::where('slug', $value)->firstOrFail();
         });
+
+        \Illuminate\Support\Facades\Route::bind('transaction', function ($value) {
+            return \App\Models\Transaction::where('id', $value)->firstOrFail();
+        });
     }
 
     /**
