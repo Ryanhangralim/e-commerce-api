@@ -50,6 +50,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/transactions', [App\Http\Controllers\V1\TransactionController::class, 'viewTransactions']);
         // update transaction status (completed, canceled)
         Route::post('/transactions/update-status', [App\Http\Controllers\V1\TransactionController::class, 'updateTransactionStatus']);
+        // Add review
+        Route::post('/transactions/add-review', [App\Http\Controllers\V1\ReviewController::class, 'addReview']);
 
         // Product routes
         Route::prefix('/product')->middleware('auth')->group(function(){
@@ -78,6 +80,10 @@ Route::prefix('v1')->group(function () {
                 Route::post('/products/{product:slug}/add-stock', [App\Http\Controllers\V1\ProductController::class, 'addStock']);
                 Route::post('/products/{product:slug}/set-discount', [App\Http\Controllers\V1\ProductController::class, 'setDiscount']);
                 Route::post('/products/{product:slug}/edit', [App\Http\Controllers\V1\ProductController::class, 'updateProduct']);
+
+                // Reply to review
+                Route::post('/{review:id}/reply', [App\Http\Controllers\V1\ReviewController::class, 'addReply'])
+                ->whereNumber('review');
             });
 
             // Check transaction busienss owner
