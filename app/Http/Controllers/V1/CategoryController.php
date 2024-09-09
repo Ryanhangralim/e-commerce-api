@@ -15,7 +15,9 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return response()->json($categories, 200);
+        return response()->json(['statusCode' => 200, 
+                                'message' => 'Data retrieved successfully',
+                                'data' => ['categories' => $categories]], 200);
     }
 
     /**
@@ -32,7 +34,8 @@ class CategoryController extends Controller
         // Insert data
         Category::create($validatedData);
 
-        return response()->json(['message' => 'Category Stored'], 201);
+        return response()->json(['statusCode' => 201,
+                                'message' => 'Category Stored'], 201);
     }
 
     /**
@@ -40,7 +43,9 @@ class CategoryController extends Controller
      */
     public function show(category $category)
     {
-        return response()->json($category, 201);
+        return response()->json(['statusCode' => 200,
+                                'message' => 'Data retrieved successfully',
+                                'data' => ['categoryData' => $category]], 200);
     }
 
     /**
@@ -55,9 +60,10 @@ class CategoryController extends Controller
         $validatedData['name'] = ucwords(strtolower($validatedData['name']));
 
         // Update Category
-        Category::findOrFail($request["categoryID"])->update(['name' => $validatedData['name']]);
+        Category::findOrFail($request['categoryID'])->update(['name' => $validatedData['name']]);
 
-        return response()->json(['message' => 'Category Updated'], 201);
+        return response()->json(['statusCode' => 201,
+                                'message' => 'Category updated'], 201);
     }
     
     /**
@@ -65,8 +71,9 @@ class CategoryController extends Controller
      */
     public function destroy(Request $request, category $category)
     {
-        Category::destroy($request["categoryID"]);
+        Category::destroy($request['categoryID']);
         
-        return response()->json(['message' => 'Category Deleted'], 201);
+        return response()->json(['statusCode' => 201,
+                                'message' => 'Category deleted'], 201);
     }
 }

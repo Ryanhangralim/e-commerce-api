@@ -21,9 +21,13 @@ class BusinessController extends Controller
     // Show all business
     public function index()
     {
-        $businesses = Business::all();
+        $data = [
+            'statusCode' => 200,
+            'message' => 'Data retrieved successfully',
+            'data' => Business::all()
+        ];
 
-        return response()->json($businesses, 200);
+        return response()->json($data, 200);
     }
 
     // Show single business detail
@@ -31,9 +35,13 @@ class BusinessController extends Controller
     {
         if($business)
         {
-            return response()->json([$business, $business->products], 200);
+            return response()->json(['statusCode' => 200,
+                                    'message' => 'Data retrieved successfully',
+                                    'data' => ['businessData' => $business->makeHidden(['products']), 
+                                               'products' => $business->products]], 200);
         } else {
-            return response()->json(["message" => "Business not found"], 404);
+            return response()->json(['statusCode' => 404,
+                                    'message' => 'Business not found'], 404);
         }
     }
     
@@ -42,9 +50,13 @@ class BusinessController extends Controller
     {
         if($business)
         {
-            return response()->json(["business_data" => new BusinessMainPageResource($business), "business_products" => BusinessProductResource::collection($business->products)], 200);
+            return response()->json(['statusCode' => 200,
+                                    'message' => 'Data retrieved successfully',
+                                    'data' => ['businessData' => new BusinessMainPageResource($business), 
+                                                'businessProducts' => BusinessProductResource::collection($business->products)]], 200);
         } else {
-            return response()->json(["message" => "Business not found"], 404);
+            return response()->json(['statusCode' => 404,
+                                    'message' => 'Business not found'], 404);
         }
     }
 }

@@ -53,15 +53,8 @@ class AuthenticationController extends Controller
         $user = User::create($validatedData);
 
         return response()->json([
+            'statusCode' => 201,
             'message' => 'User successfully registered',
-            'user' => $user
         ], 201);
-        // Log the user in
-        // Auth::login($user);
-
-        // Send email verification notification
-        // event(new Registered($user));
-
-        // return redirect()->route('verification.notice');
     }
 }

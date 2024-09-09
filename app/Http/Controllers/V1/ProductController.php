@@ -31,19 +31,23 @@ class ProductController extends Controller
     {
         // Check if user has a business
         if (Auth::user()->business) {
-            return response()->json(["products" => ProductTableResource::collection(Auth::user()->products)], 200);
+            return response()->json(['statusCode' => 200,
+                                    'message' => 'Products successfully retrieved',
+                                    'data' => ['products' => ProductTableResource::collection(Auth::user()->products)]], 200);
         }
 
-        return response()->json(["message" => "No business found"], 404);
+        return response()->json(['statusCode' => 404, 'message' => 'No business found'], 404);
     }
 
     // View product detail for seller
     public function viewProductDetail(Product $product)
     {
         if($product){
-            return response()->json(["product_data" => new ProductDetailResource($product), "reviews" => ProductDetailReviewResource::collection($product->reviews)], 201);
+            return response()->json(['statusCode' => 200,
+                                    'message' => 'Product detail successfully retrieved',
+                                    'data' => ['productData' => new ProductDetailResource($product), 'reviews' => ProductDetailReviewResource::collection($product->reviews)]], 201);
         } else {
-            return response()->json(["message" => "Product not found"], 404);
+            return response()->json(['statusCode' => 404, 'message' => 'Product not found'], 404);
         }
     }
 
@@ -58,7 +62,7 @@ class ProductController extends Controller
         $product->stock += (int) $request->numberOfProducts; 
         $product->save();
 
-        return response()->json(['message' => "Stock added successfully!"], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Stock added successfully!'], 201);
     }
 
     // Subtract stock
@@ -80,7 +84,7 @@ class ProductController extends Controller
         $product->discount = (int) $request->discount; 
         $product->save();
 
-        return response()->json(['message' => "Discount updated successfully!"], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Discount updated successfully!'], 201);
     }
 
     // Store new product
@@ -103,7 +107,7 @@ class ProductController extends Controller
         ]);
 
         $validatedData['business_id'] = $business->id;
-        $validatedData['slug'] = create_slug($validatedData['name'] . " " . $business->id);
+        $validatedData['slug'] = create_slug($validatedData['name'] . ' ' . $business->id);
 
         // Process and save image
         if ($request->hasFile('product_image')) {
@@ -120,7 +124,7 @@ class ProductController extends Controller
 
         Product::create($validatedData);
 
-        return response()->json(['message' => "Product Added successfully!"], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Product Added successfully!'], 201);
     }
 
 
@@ -141,7 +145,7 @@ class ProductController extends Controller
         ]);
 
         $validatedData['business_id'] = $product->business_id;
-        $validatedData['slug'] = create_slug($validatedData['name'] . " " . $product->business_id);
+        $validatedData['slug'] = create_slug($validatedData['name'] . ' ' . $product->business_id);
 
         // get old image path
         $oldProductPicture = $product->image;
@@ -170,16 +174,18 @@ class ProductController extends Controller
 
         $product->update($validatedData);
 
-        return response()->json(['message' => "Product updated successfully!"], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Product updated successfully!'], 201);
     }
 
     // View product detail for customer
     public function customerProductDetail(Product $product)
     {
         if($product){
-            return response()->json(["product-data" => $product->makeHidden(['business', 'reviews']), "business-data" => $product->business, "product-reviews" => $product->reviews], 200);
+            return response()->json(['statusCode' => 200, 
+                                    'message' => 'Data retrieved successfully',
+                                    'data' => ['productData' => $product->makeHidden(['business', 'reviews']), 'businessData' => $product->business, 'productReviews' => $product->reviews]], 200);
         } else {
-            return response()->json(["message" => "Product not found"], 404);
+            return response()->json(['statusCode' => 404, 'message' => 'Product not found'], 404);
         }
     }
 }

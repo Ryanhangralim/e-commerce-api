@@ -21,10 +21,10 @@ class ReviewController extends Controller
             // save reply
             $review['seller_reply'] = $validatedData['seller_reply'];
             $review->save();
-            return response()->json(["message" => "Successfully Replied!"], 201);;
+            return response()->json(['statusCode' => 201, 'message' => 'Successfully Replied!'], 201);;
         }
         else {
-            return response()->json(["message" => "You do not have access to reply!"], 403);
+            return response()->json(['statusCode' => 403, 'message' => 'You do not have access to reply!'], 403);
         }
     }
 
@@ -50,6 +50,6 @@ class ReviewController extends Controller
         // Add review
         Review::create($validatedData);
 
-        return response()->json(["message" => "Review added!"], 201);;
+        return response()->json(['statusCode' => 201, 'message' => 'Review added!'], 201);;
     }
 }

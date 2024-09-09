@@ -37,7 +37,9 @@ class TransactionController extends Controller
             'transaction_count' => $transaction_count,
         ];
 
-        return response()->json($data);
+        return response()->json(['statusCode' => 200,
+                                'message' => 'Data retrieved successfully',
+                                'data' => ['transactions' => $data]], 200);
     }
 
     // Get transaction count for every type
@@ -72,7 +74,7 @@ class TransactionController extends Controller
         {
             if($productCart->quantity > $productCart->product->stock)
             {
-                return response()->json(['message' => "Stock unavailable!"], 200);
+                return response()->json(['statusCode' => 200, 'message' => 'Stock unavailable!'], 200);
             }
         }
         
@@ -88,7 +90,7 @@ class TransactionController extends Controller
             OrderController::newOrder($transaction, $productCart);
         }
 
-        return response()->json(['message' => "Transaction Successfully Checked Out!"], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Transaction Successfully Checked Out!'], 201);
     }
 
     // Seller dashboard routes
@@ -97,17 +99,21 @@ class TransactionController extends Controller
         $status = $request->get('status');
         $business_id = Auth::user()->business->id;
 
-        if($status === "all"){
+        if($status === 'all'){
             $transactions = Transaction::with('user')->where('business_id', $business_id)->get();
         } else {
             $transactions = Transaction::with('user')->where(['status' => $status, 'business_id' => $business_id])->get();
         }
-        return response()->json(['transactions' => $transactions]);
+        return response()->json(['statusCode' => 200,
+                                'message' => 'Data sucessfully retrieved',
+                                'data' => ['transactions' => $transactions]], 200);
     }
 
     public function viewTransactionDetail(Transaction $transaction)
     {
-        return response()->json(["transaction_data" => $transaction->makeHidden(['orders']), "transaction_orders" => $transaction->orders], 200);
+        return response()->json(['statusCode' => 200, 
+                                'message' => 'Data retrieved sucessfully', 
+                                'data' => ['transactionData' => $transaction->makeHidden(['orders']), 'transactionOrders' => $transaction->orders]], 200);
     }
 
     // Update transaction status
@@ -121,6 +127,6 @@ class TransactionController extends Controller
         Transaction::where('id', $transaction_id)->update(['status' => $action]);
 
         // Redirect
-        return response()->json(['message' => 'Transaction status has been updated!'], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Transaction status has been updated!'], 201);
     }
 }

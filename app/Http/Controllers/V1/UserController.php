@@ -17,7 +17,9 @@ class UserController extends Controller
     {
         $users = User::all();
         // return response()->json(['user-data' => $users]);
-        return UserResource::collection($users);
+        return response()->json(['statusCode' => 200, 
+                                'message' => 'Data retrieved successfully',
+                                'data' => ['users' => UserResource::collection($users)]], 200);
         // dd(UserResource::collection($users));
     }
 
@@ -35,7 +37,9 @@ class UserController extends Controller
     public function show(User $user)
     {
         $user = User::with('role:id,title')->findOrFail($user->id);
-        return new UserDetailResource($user);
+        return response()->json(['statusCode' => 200, 
+        'message' => 'Data retrieved successfully',
+        'data' => ['user' => new UserDetailResource($user)]], 200);
     }
 
     /**

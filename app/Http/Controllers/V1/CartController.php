@@ -29,7 +29,9 @@ class CartController extends Controller
                 });
             });
 
-        return response()->json(["cart_data" => $userCarts]);
+    return response()->json(['statusCode' => 200, 
+                            'message' => 'Data retrieved successfully',
+                            'data' => ['cartData' => $userCarts]]);
     }
 
     // add product to cart
@@ -46,7 +48,7 @@ class CartController extends Controller
         // Check stock
         if($validatedData['quantity'] > $product->stock)
         {
-            return response()->json(['message' => "Stock unavailable!"], 200);
+            return response()->json(['message' => 'Stock unavailable!'], 200);
         }
 
         // Add additional information
@@ -59,7 +61,7 @@ class CartController extends Controller
                ->first()){
                 if($validatedData['quantity'] + $existing_cart->quantity > $product->stock)
                 {
-                    return response()->json(['message' => "Product out of stock!"], 200);
+                    return response()->json(['statusCode' => 200, 'message' => 'Product out of stock!'], 200);
                 }
             $existing_cart->quantity += $validatedData['quantity'];
             $existing_cart->save();
@@ -68,7 +70,8 @@ class CartController extends Controller
             Cart::create($validatedData);
         }
 
-        return response()->json(['message' => "Product added to cart!"], 201);
+        return response()->json(['statusCode' => 201,
+                                'message' => 'Product added to cart!'], 201);
     }
 
     // Update quantity
@@ -86,7 +89,7 @@ class CartController extends Controller
         // Check stock
         if($validatedData['quantity'] > $cart->product->stock)
         {
-            return response()->json(['message' => "Stock unavailable!"], 200);
+            return response()->json(['statusCode' => 200, 'message' => 'Stock unavailable!'], 200);
         }
 
         // Update to new quantity
@@ -99,8 +102,9 @@ class CartController extends Controller
 
         // Return JSON response
         return response()->json([
-            'message' => "Quantity updated",
-            'newTotalFormatted' => $newTotalFormatted
+            'statusCode' => 201,
+            'message' => 'Quantity updated',
+            'data' => ['newTotalFormatted' => $newTotalFormatted]
         ], 201);
     }
 
@@ -115,11 +119,12 @@ class CartController extends Controller
             if ($cart) {
                 $cart->delete();
                 return response()->json([
-                    'message' => "Product deleted",
+                    'statusCode' => 200,
+                    'message' => 'Product deleted',
                 ]);
             }
         
-            return response()->json(['message' => "Fail to delete product"], 404);
+            return response()->json(['statusCode' => 404, 'message' => 'Fail to delete product'], 404);
         }
 
         // Remove cart

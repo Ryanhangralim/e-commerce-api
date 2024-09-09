@@ -19,7 +19,7 @@ class SellerApplicationController extends Controller
         {
             return new SellerApplicationDetailResource($application);
         }
-        return response()->json(['message' => 'No application found'], 404);
+        return response()->json(['statusCode' => 404, 'message' => 'No application found'], 404);
     }
 
     // New seller application
@@ -38,7 +38,7 @@ class SellerApplicationController extends Controller
         SellerApplication::create($validatedData);
         // Mail::to($user->email)->send(new SellerApplicationReceived($user, $application));
 
-        return response()->json(['message' => 'Seller Application Received'], 201);
+        return response()->json(['statusCode' => 201, 'message' => 'Seller Application Received'], 201);
     }
 
     // return application fetched
@@ -51,7 +51,9 @@ class SellerApplicationController extends Controller
         } else {
             $applications = SellerApplication::with('user')->where('application_status', $status)->get();
         }
-        return response()->json(['applications' => $applications], 200);
+        return response()->json(['statusCode' => 200,
+                                'message' => 'Data retrieved successfully',
+                                'data' => ['applications' => $applications]], 200);
     }
 
     // verify application
@@ -78,7 +80,7 @@ class SellerApplicationController extends Controller
         BusinessController::newBusiness($businessData);
 
         // Redirect
-        return response()->json(['message' => "Application Verified"], 201);
+        return response()->json(['statusCode' => 201, 'message' => "Application Verified"], 201);
     }
 
     // reject application
@@ -91,6 +93,6 @@ class SellerApplicationController extends Controller
         SellerApplication::where('id', $applicationID)->update(['application_status' => 'rejected']);
 
         // return response
-        return response()->json(['message' => "Application Rejected"], 201);
+        return response()->json(['statusCode' => 201, 'message' => "Application Rejected"], 201);
     }
 }
