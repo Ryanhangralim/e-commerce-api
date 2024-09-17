@@ -87,7 +87,7 @@ Route::prefix('v1')->group(function () {
             });
 
             // Check transaction busienss owner
-            route::middleware('check.transaction.business.owner')->group(function (){
+            Route::middleware('check.transaction.business.owner')->group(function (){
                 // get transaction
                 Route::get('/transactions/fetch-transactions', [App\Http\Controllers\V1\TransactionController::class, 'fetchTransactions']);
 
